@@ -1,8 +1,12 @@
-from tkinter import CASCADE
-from tkinter.tix import Tree
 from unicodedata import category
 from django.db import models
 
+class UpdateCreateDate(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        abstract = True
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Category Name')
 
@@ -12,12 +16,11 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'Categories'
 
-class Quiz(models.Model):
+class Quiz(UpdateCreateDate):
     title = models.CharField(max_length=50, verbose_name = 'Quiz Title')
     category = models.ForeignKey(Category, on_delete = models.CASCADE)
     #? delete questions when category changes (models.CASCADE) 👆
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now = True)
+    
 
     def __str__(self):
         return self.title
@@ -25,7 +28,7 @@ class Quiz(models.Model):
     class Meta:
         verbose_name_plural = 'Quizzes'
 
-class Question(models.Model):
+class Question(UpdateCreateDate):
     SCALE = (
         ('B', 'Beginner'),
         ('I', 'Intermadiate'),
@@ -34,5 +37,16 @@ class Question(models.Model):
     title = models.TextField()
     quiz = models.ForeignKey(Quiz, on_delete = models.CASCADE)
     difficulty = models.CharField(max_length = 1, choices = SCALE)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now = True)
+    
+
+    def __str__(self):
+        return self.title
+
+class Option(UpdateCreateDate):
+    option_text = models.CharField(max_length = 200)
+    question = models.ForeignKey(Question, on_delete = models.CASCADE)
+    is_right = models.BooleanField(default=False)
+    
+
+    def __str__(self):
+        return self.option_text
