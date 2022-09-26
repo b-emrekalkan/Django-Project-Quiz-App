@@ -21,7 +21,7 @@ class Category(models.Model):
         return self.quiz_set.count()
 
 class Quiz(UpdateCreateDate):
-    title = models.CharField(max_length=50, verbose_name='Quiz title')
+    title = models.CharField(max_length=50, verbose_name='Quiz Title')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     #? delete questions when category changes (models.CASCADE) 👆
 
@@ -49,8 +49,6 @@ class Question(UpdateCreateDate):
 
     def __str__(self):
         return self.title
-
-   
 
 class Option(UpdateCreateDate):
     option_text = models.CharField(max_length=200)
