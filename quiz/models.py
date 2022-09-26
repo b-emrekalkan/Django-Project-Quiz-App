@@ -31,6 +31,10 @@ class Quiz(UpdateCreateDate):
     class Meta:
         verbose_name_plural = 'Quizzes'
 
+    @property
+    def question_count(self):
+        return self.question_set.count()
+
 class Question(UpdateCreateDate):
 
     SCALE = (
@@ -45,6 +49,8 @@ class Question(UpdateCreateDate):
 
     def __str__(self):
         return self.title
+
+   
 
 class Option(UpdateCreateDate):
     option_text = models.CharField(max_length=200)
