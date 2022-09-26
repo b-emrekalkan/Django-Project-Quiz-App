@@ -1,4 +1,3 @@
-from unicodedata import category
 from django.db import models
 
 class UpdateCreateDate(models.Model):
@@ -20,7 +19,7 @@ class Quiz(UpdateCreateDate):
     title = models.CharField(max_length=50, verbose_name = 'Quiz Title')
     category = models.ForeignKey(Category, on_delete = models.CASCADE)
     #? delete questions when category changes (models.CASCADE) 👆
-    
+
 
     def __str__(self):
         return self.title
