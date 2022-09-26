@@ -16,11 +16,9 @@ class QuestionAdmin(nested_admin.NestedTabularInline):
     extra = 5
     max_num = 20
 
-
 class QuizAdmin(nested_admin.NestedModelAdmin):
     model = Quiz
     inlines = [QuestionAdmin]
-
 
 admin.site.register(Category)
 admin.site.register(Quiz, QuizAdmin)
