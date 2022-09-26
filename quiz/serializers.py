@@ -1,3 +1,4 @@
+from dataclasses import fields
 from rest_framework import serializers
 from .models import (
     Category,
@@ -26,4 +27,24 @@ class QuizSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'question_count'
+        )
+
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = (
+            'id',
+            'option_text',
+            'is_right'
+        )
+
+class QuestionSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True)
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'title',
+            'options',
+            'difficulty'
         )

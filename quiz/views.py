@@ -10,7 +10,8 @@ from .models import (
 )
 from .serializers import (
     CategorySerializer,
-    QuizSerializer
+    QuizSerializer,
+    QuestionSerializer
 )
 
 class CategoryList(generics.ListAPIView):
@@ -24,3 +25,6 @@ class QuizList(generics.ListAPIView):
     filterset_fields = ['category']
     search_fields = ['title']
 
+class QuestionList(generics.ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
