@@ -14,4 +14,5 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'quiz_count'
         )

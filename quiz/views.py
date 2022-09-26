@@ -5,8 +5,10 @@ from .models import (
     Question,
     Option
 )
-
+from .serializers import (
+    CategorySerializer,
+)
 class CategoryList(generics.ListAPIView):
     queryset = Category.objects.all()
-    serializer_class = ''
+    serializer_class = 'CategorySerializer'
 
