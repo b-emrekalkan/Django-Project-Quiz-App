@@ -40,10 +40,12 @@ class OptionSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     options = OptionSerializer(many=True)
+    quiz = serializers.StringRelatedField
     class Meta:
         model = Question
         fields = (
             'id',
+            'quiz',
             'title',
             'options',
             'difficulty'
