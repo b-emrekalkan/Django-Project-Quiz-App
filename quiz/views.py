@@ -6,9 +6,10 @@ from .models import (
     Option
 )
 from .serializers import (
-    CategorySerializer,
+    CategorySerialzier,
 )
+
+
 class CategoryList(generics.ListAPIView):
     queryset = Category.objects.all()
-    serializer_class = 'CategorySerializer'
-
+    serializer_class = CategorySerialzier
