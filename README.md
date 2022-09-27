@@ -2,17 +2,15 @@
 
 ```bash
 # CREATING VIRTUAL ENVIRONMENT
-# windows
-py -m venv env
-# windows other option
+# windows 👇
 python -m venv env
-# linux / Mac OS
+# linux / Mac OS 👇
 vitualenv env
 
 # ACTIVATING ENVIRONMENT
-# windows
-source \env\Scripts\activate
-# linux / Mac OS
+# windows 👇
+source env/Scripts/activate
+# linux / Mac OS 👇
 source env/bin/activate
 
 # PACKAGE INSTALLATION
@@ -25,23 +23,34 @@ django-admin --version
 django-admin startproject main .
 ```
 
-## .gitignore
+```bash
+# 💨 If you already have a requirement.txt file, you can install the packages in the file
+# 💨 by entering the following commands respectively in the terminal 👇
+1-python -m venv env
+2-source env/Scripts/activate
+3-pip install -r requirements.txt 🚀
+4-python.exe -m pip install --upgrade pip
+5-python manage.py migrate
+6-python manage.py createsuperuser
+7-python manage.py runserver
+```
+## 🚩 .gitignore
 
-Add a gitignore file at same level as env folder, and check that it includes .env and /env lines.
+✔ Add a gitignore file at same level as env folder, and check that it includes .env and /env lines.
 
-[On this page](https://www.toptal.com/developers/gitignore) you can create useful .gitignore files for your projects.
+🔹 [On this page](https://www.toptal.com/developers/gitignore) you can create "gitignore files" for your projects.
 
-## Python Decouple
+## 🚩 Python Decouple
 
-Create a new file and name as .env at same level as env folder
+✔ Create a new file and name as .env at same level as env folder
 
-Copy your SECRET_KEY from settings.py into this .env file. Don't forget to remove quotation marks and blanks from SECRET_KEY
+✔ Copy your SECRET_KEY from settings.py into this .env file. Don't forget to remove quotation marks and blanks from SECRET_KEY
 
 ```
 SECRET_KEY=-)=b-%-w+0_^slb(exmy*mfiaj&wz6_fb4m&s=az-zs!#1^ui7j
 ```
 
-Go to settings.py, make amendments below
+✔ Go to settings.py, make amendments below 👇
 
 ```python
 from decouple import config
@@ -49,18 +58,18 @@ from decouple import config
 SECRET_KEY = config('SECRET_KEY')
 ```
 
-Go to terminal
+💻 Go to terminal 👇
 
 ```bash
 python manage.py migrate
 python manage.py runserver
 ```
 
-Click the link with CTRL key pressed in the terminal and see django rocket 🚀.
+✔ Click the link with CTRL key pressed in the terminal and see django rocket 🚀.
 
-## INSTALLING DJANGO REST
+## 🚩 INSTALLING DJANGO REST
 
-Go to terminal
+💻 Go to terminal 👇
 
 ```bash
 python manage.py makemigrations
@@ -68,24 +77,23 @@ python manage.py migrate
 pip install djangorestframework
 ```
 
-Go to settings.py and add 'rest_framework' app to installed apps
+✔ Go to settings.py and add 'rest_framework' app to INSTALLED_APPS
 
-## ADDING AN APP
+## 🚩 ADDING AN APP
 
-Go to terminal
+💻 Go to terminal 👇
 
 ```
 python manage.py startapp quiz
 ```
 
-Go to settings.py and add 'quiz' app to installed apps
+✔ Go to settings.py and add 'quiz' app to INSTALLED_APPS
 
-Go to quiz.models.py
+✔ Go to quiz.models.py 👇
 
-## ADDING MODEL
+## 🚩 ADDING MODEL
 
 ```python
-from unicodedata import category
 from django.db import models
 
 class UpdateCreateDate(models.Model):
@@ -94,6 +102,7 @@ class UpdateCreateDate(models.Model):
 
     class Meta:
         abstract = True
+        #! We used abstract to inherit repeating lines from one place. 👆
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Category Name')
 
@@ -107,7 +116,7 @@ class Quiz(UpdateCreateDate):
     title = models.CharField(max_length=50, verbose_name = 'Quiz Title')
     category = models.ForeignKey(Category, on_delete = models.CASCADE)
     #? delete questions when category changes (models.CASCADE) 👆
-    
+
 
     def __str__(self):
         return self.title
@@ -139,7 +148,15 @@ class Option(UpdateCreateDate):
         return self.option_text
 ```
 
-Go to quiz.admin.py
+💻 Go to terminal 👇
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+
+✔ Go to quiz.admin.py for registiration 👇
 
 ```python
 from django.contrib import admin
@@ -156,572 +173,247 @@ admin.site.register(Question)
 admin.site.register(Option)
 ```
 
-## SERIALIZER FOR STUDENT MODEL
+## 🚩 A third party app to create nested table structure 👉 [django-nested-admin](https://django-nested-admin.readthedocs.io/en/latest/quickstart.html) 👇
 
-create serializers.py under student_api
-
-```python
-from rest_framework import serializers
-from .models import Student
-
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Student
-        # fields = ["id", "first_name", "last_name", "number"]
-        fields = '__all__'
-```
-
-## SETING UP VIEWS
-
-go to student_api.views.py
-
-```python
-from django.shortcuts import HttpResponse
-from .models import Student
-from .serializers import StudentSerializer
-from rest_framework import generics
-
-# Create your views here.
-def home(request):
-    return HttpResponse('<h1>API Page</h1>')
-
-class StudentList(generics.ListCreateAPIView):
-    serializer_class = StudentSerializer
-    queryset = Student.objects.all()
-
-class StudentOperations(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = StudentSerializer
-    queryset = Student.objects.all()
+💻 Go to terminal
 
 ```
+pip install django-nested-admin
+```
+## 🚩 Go to settings.py and add 'nested_admin' app to INSTALLED_APPS
 
-## SETING UP URLS
-
-go to drf.urls.py
-
+## 🚩 Go to main.urls.py and add nested_admin path 👇
 ```python
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('student_api.urls')),
-]
+    path('nested_admin/', include('nested_admin.urls')),
 ```
 
-go to student_api.urls.py
+## 🚩 Go to quiz.admin.py and add 👇
+
+✔ Suppose the customer made a request: ✏"When I enter the admin panel, I can enter the quiz category, quiz title, quiz questions and answers in one place" ✏
+As a developer, we customize the admin panel according to the customer's request.
 
 ```python
-from django.urls import path
-from .views import home, StudentList, StudentOpr
+import nested_admin
+class OptionAdmin(nested_admin.NestedTabularInline):
+    model = Option
+    extra = 5
 
-urlpatterns = [
-    path('', home),
-    path('student/', StudentList.as_view()),
-    path('student/<int:pk>/', StudentOpr.as_view(), name="detail"),
-]
+class QuestionAdmin(nested_admin.NestedTabularInline):
+    model = Question
+    inlines = [OptionAdmin]
+    extra = 5
+    max_num = 20
+
+
+class QuizAdmin(nested_admin.NestedModelAdmin):
+    model = Quiz
+    inlines = [QuestionAdmin]
+
+admin.site.register(Quiz, QuizAdmin)
 ```
 
-## RUNNING SERVER
-
-```bash
-py manage.py makemigrations
-py manage.py migrate
-py .\manage.py createsuperuser
-pip freeze > requirements.txt
-py .\manage.py runserver
-```
-
-## CORS SETUP
-
-```bash
-pip install django-cors-headers
-```
-
-settings.py
-
+## 🚩 Go to quiz.views.py and add CategoryList 👇
 ```python
-ALLOWED_HOSTS = ['*']
-INSTALLED_APPS = [
-    # ...
-    'corsheaders',
-]
-MIDDLEWARE = [
-    # ...
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    # ...
-]
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_EXPOSE_HEADERS = (
-    'Access-Control-Allow-Origin: *',
+from rest_framework import generics
+from .models import (
+    Category,
+    Quiz,
+    Question,
+    Option
 )
+from .serializers import (
+    CategorySerialzier,
+)
+
+class CategoryList(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerialzier
 ```
 
-# HANDS-ON PART
+## 🚩 SERIALIZER FOR CATEGORY MODEL
 
-Permissions determine whether a request should be granted or denied access.
-
-Authorization checks who sends this request.
-
-## Permissions
-
-### Setting the permission policy
-
-The default permission policy may be set globally, using the `DEFAULT_PERMISSION_CLASSES` setting. For example.
-
-```python
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
-}
-```
-
-You can also set the authentication policy on a per-view, or per-viewset basis, using the `APIView` class-based views.
-**Example:**
-
-```python
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-class ExampleView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, format=None):
-        content = {
-            'status': 'request was permitted'
-        }
-        return Response(content)
-```
-
-### Available Permissions
-
-#### AllowAny
-
-The AllowAny permission class will allow unrestricted access, regardless of if the request was authenticated or unauthenticated.
-
-#### IsAuthenticated
-
-The IsAuthenticated permission class will deny permission to any unauthenticated user, and allow permission otherwise.
-This permission is suitable if you want your API to only be accessible to registered users.
-
-#### IsAdminUser
-
-The IsAdminUser permission class will deny permission to any user, unless user.is_staff is True in which case permission will be allowed.
-This permission is suitable if you want your API to only be accessible to a subset of trusted administrators.
-
-#### IsAuthenticatedOrReadOnly
-
-The IsAuthenticatedOrReadOnly will allow authenticated users to perform any request. Requests for unauthorised users will only be permitted if the request method is one of the "safe" methods; GET, HEAD or OPTIONS.
-
-#### DjangoModelPermissions
-
-This permission class ties into Django's standard django.contrib.auth model permissions. This permission must only be applied to views that have a .queryset property or get_queryset() method.
-
-#### DjangoModelPermissionsOrAnonReadOnly
-
-Similar to DjangoModelPermissions, but also allows unauthenticated users to have read-only access to the API.
-
-#### DjangoObjectPermissions
-
-This permission class ties into Django's standard object permissions framework that allows per-object permissions on models.
-
-## Authentication
-
-### Setting the authentication scheme
-
-The default authentication schemes may be set globally, using the DEFAULT_AUTHENTICATION_CLASSES setting. For example.
-
-```python
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ]
-}
-```
-
-You can also set the authentication scheme on a per-view or per-viewset basis, using the APIView class-based views.
-Example
-
-```python
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-class ExampleView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-```
-
-## TokenAuthentication
-
-This authentication scheme uses a simple token-based HTTP Authentication scheme. Token authentication is appropriate for client-server setups, such as native desktop and mobile clients.
-
-In Basic Authentication you need to send always send username and password, in every request in headers. But this is not safe. To handle this issue token authentication was introduced. When a user logged in an authentication is sent as a response. After that in every request this token will be sent in heades instead of password and username.
-
-These tokens should be stored in backend database. We have options to handle the this sequence. Most used case is to create a token when a user logged in and save it in db and then delete this token whenever user logged out.
-
-To use the `TokenAuthentication` scheme you'll need to configure the authentication classes to include `TokenAuthentication`, and additionally include `rest_framework.authtoken` in your `INSTALLED_APPS` setting:
-
-go to settings.py and add 'rest_framework.authtoken' into installed apps
-
-```python
-INSTALLED_APPS = [
-    ...
-    'rest_framework.authtoken'
-]
-```
-
-go to terminal
-
-```bash
-py manage.py migrate
-```
-
-navigate to admin dashboard and check Token table
-
-add users, and token to these users
-
-go to postman send Token
-
-## Adding an App for Authentication
-
-go to terminal
-
-```bash
-py manage.py startapp user_api
-```
-
-go to settings.py and add 'user_api' into installed apps
-
-go to models.py
-
-```python
-from django.db import models
-
-# Create your models here.
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
-```
-
-go to serializers.py
+✔ Create serializers.py under quiz
 
 ```python
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.password_validation import validate_password
+from .models import (
+    Category,
+    Quiz,
+    Question,
+    Option
+)
 
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
-
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
-
+class CategorySerialzier(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name')
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True}
-        }
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
-
-        return attrs
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+        model = Category
+        fields = (
+            'id',
+            'name',
+            'quiz_count'
         )
 
-        
-        user.set_password(validated_data['password'])
-        user.save()
-
-        return user
-
-# from django.contrib.auth.models import User
-# from rest_framework import serializers
-
-
-# class RegistrationSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password']
 ```
-
-go to main urls.py, and add following line into urlpatterns
+## 🚩 Let's write a function to show the user how many quizzes there are. Let's go to models.py for that. Here "quiz_set" will refer to its submodel (Quiz)
 
 ```python
-
-urlpatterns = [
-    ...
-    path('user/', include('user_api.urls')),
-]
+class Category(models.Model):
+    @property
+    def quiz_count(self):
+        return self.quiz_set.count()
 ```
 
-go to user_api urls.py
+## 🔴 What is the @property decorator in Python? 👆
+
+🔹 @property decorator is a built-in decorator in Python which is helpful in defining the properties effortlessly without manually calling the inbuilt function property(). Which is used to return the property attributes of a class from the stated getter, setter and deleter as parameters.
+
+## 🚩 Time to create urls.py under quiz app to add the view we wrote 👇
 
 ```python
-from rest_framework.authtoken.views import obtain_auth_token
 from django.urls import path
-from .views import  logout_view, RegisterView # ,registration_view
-
-urlpatterns = [
-    path('login/', obtain_auth_token, name='login'),
-    # path('register/', registration_view, name='register'),
-    path('register/', RegisterView.as_view(), name='register'),
-    path('logout/', logout_view, name='logout'),
-]
-```
-
-go to views.py
-
-```python
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .serializers import RegistrationSerializer
-from rest_framework.authtoken.models import Token
-from rest_framework import generics
-from django.contrib.auth.models import User
-from rest_framework import status
-
-
-# Create your views here.
-# Registration with function based view
-# @api_view(['POST'])
-# def registration_view(request):
-#     if request.method == 'POST':
-#         serializer = RegistrationSerializer(data=request.data)
-#         data = {}
-#         if serializer.is_valid():
-#             password = serializer.validated_data.get('password')
-#             # serializer.validated_data['password'] = make_password(password)
-#             user = serializer.save()
-#             user.set_password(password)
-#             user.save()
-#             # token, _ = Token.objects.get_or_create(user=user)
-#             # data = serializer.data
-#             # data['token'] = token.key
-#         else:
-#             data = serializer.errors
-#         return Response(data)
-
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = RegistrationSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid(raise_exception=False):
-            return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        user = serializer.save()
-        token= Token.objects.create(user=user)
-        data = serializer.data
-        data['token'] = token.key
-        headers = self.get_success_headers(serializer.data)
-        return Response({"message": "created successfully", "details": data}, status=status.HTTP_201_CREATED, headers=headers)
-  
-@api_view(['POST'])
-def logout_view(request):
-    if request.method == 'POST':
-        request.user.auth_token.delete()
-        data = {
-            'message': 'logout'
-        }
-        return Response(data)
-```
-
-## Custom Permission
-
-To implement a custom permission, override BasePermission and implement either, or both, of the following methods:
-.has_permission(self, request, view)
-.has_object_permission(self, request, view, obj)
-The methods should return True if the request should be granted access, and False otherwise.
-
-under student_api create permissions.py
-
-```python
-from rest_framework import permissions
-
-class IsAdminOrReadOnly(permissions.IsAdminUser):
-
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            return bool(request.user.is_staff)
-
-class IsAddedByUserOrReadOnly(permissions.BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            return obj.user == request.user or request.user.is_staff
-```
-
-go to student_api models.py and make following amendments
-
-```python
-from django.db import models
-from django.contrib.auth.models import User
-
-class Student(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    number = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.last_name} {self.first_name}"
-```
-
-Here we added a new field as user which has one to many relation with User table. When we do migrations it will ask what do with current students in our db as they don't have any user currently. When asked you can type 1 and then press enter.
-
-go to terminal
-
-```bash
-py manage.py makemigrations
-py manage.py migrate
-```
-
-go to student_api views.py
-
-```python
-from django.shortcuts import HttpResponse
-from .models import Student
-from .serializers import StudentSerializer
-from rest_framework import generics
-
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-# from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from .permissions import IsAdminOrReadOnly, IsAddedByUserOrReadOnly
-# from rest_framework.response import Response
-# from rest_framework import status
-# Create your views here.
-def home(request):
-    return HttpResponse('<h1>API Page</h1>')
-
-class StudentList(generics.ListCreateAPIView):
-    serializer_class = StudentSerializer
-    queryset = Student.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
-    # authentication_classes = [BasicAuthentication]
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     if not serializer.is_valid(raise_exception=False):
-    #         return Response({"message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    #     serializer.validated_data['user'] = request.user
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response({"message": "created successfully"}, status=status.HTTP_201_CREATED, headers=headers)
-
-class StudentOperations(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = StudentSerializer
-    queryset = Student.objects.all()
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [IsAddedByUserOrReadOnly]
-```
-
-# BONUS PART
-
-## USING [ dj-rest-auth](https://dj-rest-auth.readthedocs.io/en/latest/index.html)
-
-go to terminal
-
-```bash
-pip install dj-rest-auth
-```
-
-Add `dj_rest_auth` app to INSTALLED_APPS in your django settings.py:
-
-```python
-INSTALLED_APPS = (
-    ...,
-    'rest_framework',
-    'rest_framework.authtoken',
-    ...,
-    'dj_rest_auth'
-)
-```
-
-Add dj_rest_auth main urls:
-
-```python
-urlpatterns = [
-    ...,
-    path('auth/', include('dj_rest_auth.urls'))
-]
-```
-
-Migrate your database
-
-```bash
-python manage.py migrate
-```
-
-## Registration (optional)
-
-If you want to enable standard registration process you will need to install `django-allauth` by using `pip install 'dj-rest-auth[with_social]'`.
-
-Add `django.contrib.sites`, `allauth`, `allauth.account`, `allauth.socialaccount` and `dj_rest_auth.registration` apps to INSTALLED_APPS in your django settings.py:
-
-Add `SITE_ID = 1` to your django settings.py
-
-```bash
-INSTALLED_APPS = (
-    ...,
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth.registration',
+from .views import (
+    CategoryList
 )
 
-SITE_ID = 1
-```
-
-Add dj_rest_auth.registration urls:
-
-```bash
 urlpatterns = [
-    ...,
-    path('auth/registration/', include('dj_rest_auth.registration.urls'))
+    path('', CategoryList.as_view()),
 ]
 ```
 
-Migrate your database
+## 🚩 Go to main.urls.py and add this path 👇
+```python
+ path('quiz/', include('quiz.urls')),
+```
 
-```bash
-python manage.py migrate
+## 🚩 Go to quiz.views.py and add QuizList view 👇
+```python
+class QuizList(generics.ListAPIView):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+```
+
+## 🚩 We need a serializer for this view. So go to quiz.serializers.py and add "QuizSerializer"👇
+```python
+class QuizSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+    class Meta:
+        model = Quiz
+        fields = (
+            'id',
+            'title',
+            'category',
+            'question_count',
+        )
+```
+## 🔴 [StringRelatedField()](https://www.django-rest-framework.org/api-guide/relations/#stringrelatedfield) 👆
+🔹 StringRelatedField may be used to represent the target of the relationship using its __str__ method. For example, the following serializer:
+```python
+class AlbumSerializer(serializers.ModelSerializer):
+    tracks = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = Album
+        fields = ['album_name', 'artist', 'tracks']
+```
+🔹 Would serialize to the following representation:
+```python
+{
+    'album_name': 'Things We Lost In The Fire',
+    'artist': 'Low',
+    'tracks': [
+        '1: Sunflower',
+        '2: Whitetail',
+        '3: Dinosaur Act',
+        ...
+    ]
+}
+```
+🔹 This field is read only.
+
+## 🚩 To notify the user of the number of questions, add the following to models.py 👇
+```python
+    @property
+    def question_count(self):
+        return self.question_set.count()
+```
+
+## 🚩 Go to quiz.urls.py and add the 'QuizList' path 👇
+```python
+path('quiz/', QuizList.as_view()),
+```
+
+## 🚩We can download djago-filter to be able to filter 👇
+💻 Go to terminal
+
+```
+pip install django-filter
+```
+## 🚩 Go to settings.py and add 'django_filters' to INSTALLED_APPS
+
+
+## 🚩 Go to quiz.views.py and customize QuizList 👇
+```python
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
+class QuizList(generics.ListAPIView):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['category']
+    search_fields = ['title']
+```
+
+## 🚩 Create QuestionList view here 👇
+```python
+class QuestionList(generics.ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+```
+
+## 🚩 Go to "Option" model in quiz.models.py and add "related_name" to "question" 👇
+```python
+ question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
+```
+
+## 🔴 related_name() 👆
+🔹 The related_name attribute specifies the name of the reverse relation from the User model back to your model. If you don't specify a related_name, Django automatically creates one using the name of your model with the suffix _set. Syntax: field_name = models.Field(related_name="name")
+
+## 🚩 We need a serializer for QuestionList view. So go to quiz.serializers.py and add "OptionSerializer" and "QuestionSerializer" 👇
+```python
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = (
+            'id',
+            'option_text',
+            'is_right'
+        )
+
+class QuestionSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True) #! options, refers to "related_name"
+    quiz = serializers.StringRelatedField
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'quiz',
+            'title',
+            'options',
+            'difficulty'
+        )
+```
+## 🚩 Add the "question" path to quiz.urls.py 👇
+```python
+ path('question/', QuestionList.as_view()),
+```
+
+## 🚩 Go to quiz.views.py and add filter fields to "QuestionList" 👇
+```python
+ filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+ filterset_fields = ['quiz', 'difficulty']
 ```

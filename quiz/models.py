@@ -1,4 +1,3 @@
-import re
 from django.db import models
 
 class UpdateCreateDate(models.Model):
@@ -7,6 +6,7 @@ class UpdateCreateDate(models.Model):
 
     class Meta:
         abstract = True
+        #! We used abstract to inherit repeating lines from one place. 👆
 
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Category Name')
